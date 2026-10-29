@@ -1,0 +1,26 @@
+# dsh-mobile-use — a DeepSeek Harness profile bundle.
+#
+# It inserts two rows:
+#   1. the mobile device MCP server (mobile-next/mobile-mcp) through the shared
+#      MCP client — the agent gets `mcp__mobile__*` tools for iOS simulators and
+#      Android devices/emulators;
+#   2. this package itself: the Host half registers authenticated routes under
+#      /api/mobile-mirror/* and the Client half contributes the "Simulator" tab
+#      type (with a guide entry) to the right Sidebar.
+#
+# One mobile MCP server per profile. If you already mount a `serverName: mobile`
+# row elsewhere, remove that row first or the loader reports a duplicate.
+- insert:
+    - id: mobile-mcp
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        serverName: mobile
+        transport: stdio
+        command: npx
+        args: ['-y', '@mobilenext/mobile-mcp@1.0.8']
+        env:
+          MOBILEMCP_DISABLE_TELEMETRY: '1'
+        toolCallTimeoutMs: 120000
+        failOnStartupError: false
+    - id: mobile-use
+      name: 'dsh-mobile-use'
