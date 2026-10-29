@@ -1,6 +1,6 @@
 {
   "name": "dsh-mobile-use",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Mobile use for DeepSeek Harness: iOS/Android device tools plus a live Simulator mirror in the right Sidebar.",
   "type": "module",
   "license": "MIT",

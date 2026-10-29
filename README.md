@@ -56,7 +56,8 @@ resolves its dependencies and registers it as a profile bundle layer.
 ## Use
 
 - **Mirror**: right Sidebar → guide → **Simulator**. The tab shows the booted device and
-  refreshes automatically (≈3–5 fps; each frame is a simulator screenshot).
+  refreshes automatically (≈2–4 fps; each frame is a simulator screenshot downscaled to
+  1000 px for the mirror).
 - **Boot one**: with no simulator running, press **Open Simulator**. The plugin boots the first
   available iPhone, opens Simulator.app and starts mirroring.
 - **Agent**: ask things like *“take a screenshot of the iPhone simulator”*, *“open Settings on
@@ -105,7 +106,8 @@ service, so they inherit the app's authenticated origin (the browser session coo
 
 - `GET /api/mobile-mirror/status` — booted devices;
 - `GET /api/mobile-mirror/frame.png` — one PNG screenshot (`xcrun simctl io … screenshot`
-  for iOS, `adb exec-out screencap -p` for Android);
+  for iOS, `adb exec-out screencap -p` for Android), downscaled to 1000 px with `sips`
+  when available;
 - `POST /api/mobile-mirror/launch` — boot the first available iPhone and open Simulator.app.
 
 The **Client half** (`client.js`) registers a page tab type through
@@ -119,7 +121,7 @@ browser session can read them.
 
 ## Limitations
 
-- **Frames, not video** — each frame is a screenshot; expect ~3–5 fps depending on the
+- **Frames, not video** — each frame is a screenshot; expect ~2–4 fps depending on the
   machine and the simulator. Good for watching state, not for judging animation.
 - **View-only** — clicking the mirror does not inject input. Use the agent tools for that
   (and the same device state is what you see).
@@ -127,6 +129,18 @@ browser session can read them.
 - **Android needs `adb`** and a connected device; the mirror falls back to Android only when
   no iOS simulator is booted.
 - **macOS only for iOS**; other platforms can still use the Android path.
+
+## Troubleshooting
+
+- **The guide has no Simulator card** — reload the Web UI (or restart the app) so the
+  Client half loads; client plugins are mounted at page boot.
+- **The tab stays on “Connecting…”** — the Host half may still be running a previous module
+  generation after an in-place update. Toggle the plugin off/on in the Plugin Manager, or
+  restart the app. On a fresh install the first frame normally arrives within a second.
+- **Frame endpoint errors** — check `xcrun simctl list devices booted` and, for Android,
+  `adb devices`. The status route reads the same sources.
+- **No simulator device at all** — create one in Xcode
+  (`xcrun simctl create …`) or press **Open Simulator** in the tab.
 
 ## Version compatibility
 

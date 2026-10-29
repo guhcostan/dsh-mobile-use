@@ -23,6 +23,7 @@ import { promisify } from 'node:util'
 const run = promisify(execFile)
 const STATUS_TTL_MS = 1000
 const MAX_BUFFER = 64 * 1024 * 1024
+const MIRROR_MAX_EDGE = 1000
 const IOS_PREFIX = 'com.apple.CoreSimulator.SimRuntime.'
 
 let devicesCache = { at: 0, devices: [] }
@@ -101,13 +102,25 @@ async function captureFrame(device) {
     return stdout
   }
   const file = join(tmpdir(), `dsh-mobile-frame-${process.pid}-${frameSeq++}.png`)
+  const scaled = join(tmpdir(), `dsh-mobile-frame-${process.pid}-${frameSeq++}-s.png`)
   try {
     await run('xcrun', ['simctl', 'io', device.id, 'screenshot', '--type=png', file], {
       maxBuffer: MAX_BUFFER,
     })
-    return await readFile(file)
+    // The simulator screenshot is a multi-megabyte Retina PNG; downscale it for
+    // the mirror so each frame stays small over the app bridge. sips ships with
+    // macOS; when it is unavailable, fall back to the original frame.
+    try {
+      await run('sips', ['-Z', String(MIRROR_MAX_EDGE), file, '--out', scaled], {
+        maxBuffer: MAX_BUFFER,
+      })
+      return await readFile(scaled)
+    } catch {
+      return await readFile(file)
+    }
   } finally {
     await unlink(file).catch(() => {})
+    await unlink(scaled).catch(() => {})
   }
 }
 
