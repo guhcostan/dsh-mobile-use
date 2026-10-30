@@ -1,6 +1,6 @@
 {
-  "name": "dsh-mobile-use",
-  "version": "0.1.1",
+  "name": "@guhcostan/dsh-mobile-use",
+  "version": "0.1.2",
   "description": "Mobile use for DeepSeek Harness: iOS/Android device tools plus a live Simulator mirror in the right Sidebar.",
   "type": "module",
   "license": "MIT",
@@ -60,5 +60,8 @@
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "~4.0.5"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

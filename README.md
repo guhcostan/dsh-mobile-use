@@ -1,5 +1,7 @@
 # dsh-mobile-use
 
+[![CI](https://github.com/guhcostan/dsh-mobile-use/actions/workflows/ci.yml/badge.svg)](https://github.com/guhcostan/dsh-mobile-use/actions/workflows/ci.yml)
+
 **Mobile use + live Simulator mirror for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness).**
 A profile bundle that gives the agent mobile-device tools **and** adds a **Simulator tab to the right
 Sidebar** with a live mirror of the booted iOS Simulator — the device lives next to the conversation,
@@ -49,6 +51,9 @@ resolves its dependencies and registers it as a profile bundle layer.
 
 3. **Reload the Web UI** (or restart the app) so the Client half loads, then open the right
    Sidebar guide (compass) and pick **Simulator**.
+
+> **npm:** the package is published as `@guhcostan/dsh-mobile-use`; once the npm release is
+> live, install it by name with `plugin_manager install_bundle target=@guhcostan/dsh-mobile-use@0.1.2`.
 
 > One mobile MCP server per profile: if you already mount a `serverName: mobile` MCP row,
 > remove it first or you will have two servers with the same name.

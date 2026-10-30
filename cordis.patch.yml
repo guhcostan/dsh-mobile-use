@@ -23,4 +23,4 @@
         toolCallTimeoutMs: 120000
         failOnStartupError: false
     - id: mobile-use
-      name: 'dsh-mobile-use'
+      name: '@guhcostan/dsh-mobile-use'

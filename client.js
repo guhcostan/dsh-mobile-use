@@ -1,11 +1,11 @@
 window.__ModuleLoader__.load({
-  id: 'dsh-mobile-use',
+  id: '@guhcostan/dsh-mobile-use',
   factory(require) {
     const React = require('react')
     const h = React.createElement
     const { useEffect, useRef, useState } = React
 
-    const TYPE_ID = 'dsh-mobile-use'
+    const TYPE_ID = '@guhcostan/dsh-mobile-use'
     const KIND = 'mobile-mirror'
     const STATUS_URL = '/api/mobile-mirror/status'
     const FRAME_URL = '/api/mobile-mirror/frame.png'

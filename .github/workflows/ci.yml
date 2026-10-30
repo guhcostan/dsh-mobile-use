@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Validate manifests and locales
+        run: |
+          node -e "JSON.parse(require('fs').readFileSync('package.json','utf8'))"
+          for f in locale/*.json; do
+            [ -e "$f" ] || continue
+            node -e "JSON.parse(require('fs').readFileSync(process.argv[1],'utf8'))" "$f"
+          done
+      - name: Check JavaScript syntax
+        run: |
+          for f in *.js; do
+            [ -e "$f" ] || continue
+            node --check "$f"
+          done
+      - name: Validate Cordis patch
+        run: |
+          npm install --no-save js-yaml@4
+          node - <<'NODE'
+          const yaml = require('js-yaml')
+          const fs = require('fs')
+          const doc = yaml.load(fs.readFileSync('cordis.patch.yml', 'utf8'))
+          if (!Array.isArray(doc)) throw new Error('cordis.patch.yml must be a YAML array')
+          console.log('cordis.patch.yml entries:', doc.length)
+          NODE
+      - name: Package dry run
+        run: npm pack --dry-run
